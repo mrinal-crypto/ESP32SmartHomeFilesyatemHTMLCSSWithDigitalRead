@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!--===== CSS =====-->
+        <link rel="stylesheet" href="assets/css/styles.css">
+
+        <title>Firebase Settings</title>
+    </head>
+    <body>
+        <div class="l-form">
+            <form action="" class="form">
+                <h1 class="form__title">Firebase Settings</h1>
+
+                <div class="form__div">
+                    <input type="text" class="form__input" placeholder=" " id="url" required>
+                    <label for="" class="form__label">Firebase URL</label>
+                </div>
+
+                <div class="form__div">
+                    <input type="text" class="form__input" placeholder=" " id="token" required>
+                    <label for="" class="form__label">Authentication Token</label>
+                </div>
+
+                <div class="form__div">
+                    <input type="text" class="form__input" placeholder=" " id="roomId" required>
+                    <label for="" class="form__label">Room No</label>
+                </div>
+                <input type="submit" class="form__button" value="Submit" onclick="submitForm()">
+            </form>
+        </div>
+
+        <script>
+            function submitForm() {
+              // Add your form submission logic here
+              // For example, you can access form fields by their IDs
+            var url = document.getElementById("url").value;
+            var token = document.getElementById("token").value;
+            var roomId = document.getElementById("roomId").value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/Submit", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            // Send the values as parameters
+            xhr.send("url=" + encodeURIComponent(url) +
+                    "&token=" + encodeURIComponent(token) +
+                    "&roomId=" + encodeURIComponent(roomId));
+
+            // Handle the response
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    alert("Values saved successfully");
+                }
+            };
+
+            }
+        </script>
+    </body>
+</html>
