@@ -68,6 +68,8 @@ unsigned int prev_s3;
 unsigned int prev_s4;
 
 FirebaseData firebaseData;
+FirebaseAuth auth;
+FirebaseConfig config;
 AsyncWebServer server(80);
 Preferences preferences;
 
@@ -125,7 +127,13 @@ void connectFirebase() {
   if (preferences.getString("firebaseUrl", "") != "" && preferences.getString("firebaseToken", "") != "") {
     Serial.println("Firebase settings already exist. Checking Firebase connection...");
 
-    Firebase.begin(preferences.getString("firebaseUrl", ""), preferences.getString("firebaseToken", ""));
+    String firebaseUrl = preferences.getString("firebaseUrl", "");
+    String firebaseToken = preferences.getString("firebaseToken", "");
+    config.database_url = firebaseUrl;
+    config.api_key = firebaseToken;
+    Firebase.signUp(&config, &auth, "", "");  //for anonymous user
+    delay(100);
+
     roomId = preferences.getString("roomId", "");
     delay(100);
     Firebase.reconnectWiFi(true);
@@ -188,12 +196,15 @@ void setupServer() {
     preferences.putString("firebaseToken", firebaseToken);
     preferences.putString("roomId", roomId);
 
-    Firebase.begin(firebaseUrl, firebaseToken);
+    config.database_url = firebaseUrl;
+    config.api_key = firebaseToken;
+    Firebase.signUp(&config, &auth, "", "");  //for anonymous user
     delay(100);
+    Firebase.begin(&config, &auth);
+    delay(100);
+
     Firebase.reconnectWiFi(true);
     delay(100);
-
-
 
     if (isFirebaseConnected() == true) {
       firebaseStatus = "ok";
